@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "615752753862",
+    "project_id": "hotel-finder-apk",
+    "storage_bucket": "hotel-finder-apk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:615752753862:android:c392a106dd3c403e47edc7",
+        "android_client_info": {
+          "package_name": "com.example.untitled1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "615752753862-qkb3i14b4lfdcsm90anbf9pqajtorrfa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBQmilYtaas1SWluzNiB7I8TEkalKnUCI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "615752753862-qkb3i14b4lfdcsm90anbf9pqajtorrfa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "615752753862-9rssdfjikubpn812bcpdvhtnlcufjs92.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sandeidevlab.hotelFinder"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:615752753862:android:9064ef1c2d11501247edc7",
+        "android_client_info": {
+          "package_name": "com.sandeidevlab.hotel_finder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "615752753862-jp9dtdqurlibk9rf23ll83e8o4qgdlmc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sandeidevlab.hotel_finder",
+            "certificate_hash": "2039f60c2a06311eaf661ab850609fb188502f55"
+          }
+        },
+        {
+          "client_id": "615752753862-qkb3i14b4lfdcsm90anbf9pqajtorrfa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBQmilYtaas1SWluzNiB7I8TEkalKnUCI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "615752753862-qkb3i14b4lfdcsm90anbf9pqajtorrfa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "615752753862-9rssdfjikubpn812bcpdvhtnlcufjs92.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sandeidevlab.hotelFinder"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
