@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_finder/src/screens/favourites.dart';
 import 'package:hotel_finder/src/screens/inbox.dart';
@@ -18,7 +19,7 @@ class _homepageState extends State<homepage> {
   final pages=[
     Explore(),
     favourites(),
-    Inbox(),
+    ChatListScreen(FirebaseAuth.instance.currentUser!.uid),
     userprofile()
   ];
   void _onItemTapped(int index) {
@@ -103,7 +104,6 @@ class _ExploreState extends State<Explore> {
             decoration: InputDecoration(
               hintText: "Search for hotel,city",
               hintStyle: TextStyle(
-
               ),
               border: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey,width: 2),
@@ -128,7 +128,7 @@ class _ExploreState extends State<Explore> {
                       return SizedBox.shrink(); // Return an empty SizedBox if index is out of range
                     }
                     return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 30.0),
+                      padding: const EdgeInsets.symmetric(vertical: 30.0,horizontal: 10),
                       child: GestureDetector(
                         onTap: (){
                           Navigator.push(
@@ -149,7 +149,7 @@ class _ExploreState extends State<Explore> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(20), // Set the desired border radius here
                                   child: Image(
-                                    image: AssetImage("assets/images/dummyimage.jpg"),
+                                    image: NetworkImage(itemsList[index]['image']),
                                     fit: BoxFit.fill,
                                   ),
                                 ),
@@ -161,7 +161,7 @@ class _ExploreState extends State<Explore> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 20.0,top: 10),
-                                child: Text("Nairobi",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w300),),
+                                child: Text(itemsList[index]['Location'],style: TextStyle(fontSize: 20,fontWeight: FontWeight.w300),),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 20.0,top: 10),
@@ -172,9 +172,6 @@ class _ExploreState extends State<Explore> {
                         ),
                       ),
                     );
-                    /*ListTile(
-                trailing: Text(itemsList[index]['Hotel_name']),
-                );*/
                   },
                 ),
               )

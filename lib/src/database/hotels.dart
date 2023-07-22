@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hotel_finder/src/database/hotelsreg.dart';
 import 'package:hotel_finder/src/database/messages.dart';
 
@@ -21,18 +22,18 @@ class Hoteldatabase{
       return [];
     }
   }
-  Future blockHotel(String name,String manager)async{
+  Future blockHotel(String name,String manager,String email,String number,String city,String desription,String image,String image1,String image2,String image3,String hid)async{
     try{
-      await hotelregistration().reportHotel(name,manager);
+      await hotelregistration().reportHotel(name,manager,email,number,city,desription,image,image1,image2,image3,hid);
 
     }catch(e){
       print("error,not working here");
       print(e.toString());
     }
   }
-  Future likeHotel(String name,String manager,String uid)async{
+  Future likeHotel(String name,String manager,String email,String number,String city,String desription,String image,String image1,String image2,String image3,String uid,String hid)async{
     try{
-      await hotelregistration().likehotel(name,manager,uid);
+      await hotelregistration().likehotel(name,manager,email,number,city,desription,image,image1,image2,image3,uid,hid);
 
     }catch(e){
       print("error,not working here");
@@ -62,4 +63,45 @@ class Hoteldatabase{
     }
   }
 
+  Future<List<Map<String, dynamic>>> getFavourites() async {
+    List<Map<String, dynamic>> favouritesList = [];
+    try {
+      // Get the current logged-in user
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null) {
+        String userUid = currentUser.uid;
+
+        // Fetch the user document that has a Uid field matching the current user's UID
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('Users')
+            .where('Uid', isEqualTo: userUid)
+            .limit(1) // Assuming there's only one document with a matching Uid
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          DocumentSnapshot userSnapshot = querySnapshot.docs.first;
+
+          // Get a reference to the "favourites" subcollection inside the user document
+          CollectionReference favouritesCollectionRef =
+          userSnapshot.reference.collection('Favourites');
+
+          // Fetch the documents inside the "favourites" subcollection
+          QuerySnapshot favouritesSnapshot = await favouritesCollectionRef.get();
+
+          // Process the documents inside the "favourites" subcollection
+          favouritesSnapshot.docs.forEach((document) {
+            Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            favouritesList.add(data);
+          });
+        }
+      }
+
+      return favouritesList;
+    } catch (e) {
+      print('Error getting favourites list: $e');
+      // Handle error here, such as showing an error message.
+      return [];
+    }
+  }
 }

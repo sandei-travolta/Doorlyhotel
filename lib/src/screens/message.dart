@@ -4,17 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:hotel_finder/colors.dart';
 import 'package:hotel_finder/src/database/hotels.dart';
 import 'package:hotel_finder/src/database/messages.dart';
-import 'package:hotel_finder/src/screens/widgets.dart';
+
 
 import '../firebase/auth_service.dart';
 
 
-/*
 class MessageScreen extends StatefulWidget {
   final String hotelName;
   final String hotelId;
 
-  const MessageScreen({required this.hotelName, required this.hotelId});
+  const MessageScreen({required this.hotelName, required this.hotelId, required id});
 
   @override
   State<MessageScreen> createState() => _MessageScreenState();
@@ -142,86 +141,3 @@ class MessageBubble extends StatelessWidget {
   }
 }
 
-*/
-class MessageScreen extends StatefulWidget {
-  final String id;
-  const MessageScreen({Key? key, required this.id}) : super(key: key);
-
-  @override
-  State<MessageScreen> createState() => _MessageScreenState();
-}
-
-class _MessageScreenState extends State<MessageScreen> {
-  var roomid;
-  @override
-  Widget build(BuildContext context) {
-    final firebase=FirebaseFirestore.instance;
-    return Column(
-      children: [
-        Expanded(
-          child: Container(
-            child: StreamBuilder(
-                stream: firebase.collection("chats").snapshots(),
-                builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
-                  if(snapshot.hasData){
-                    List<QueryDocumentSnapshot?>  alldata=snapshot.data!.docs.where((element)=>['Users'].contains(widget.id)&&element['user'].contains(FirebaseAuth.instance.currentUser!.uid)).toList();
-                    QueryDocumentSnapshot? data =alldata.isNotEmpty? alldata.first:null;
-                    if(snapshot.data!.docs.isNotEmpty){
-                      if (data!=null){
-                          roomid=data.id;
-                      }
-                      return data==null? Container():StreamBuilder(
-                        stream: data.reference.collection('messages').orderBy('datetime',descending: true).snapshots(),
-                        builder: (context,AsyncSnapshot<QuerySnapshot> snap) {
-                          return ListView.builder(
-                            itemCount: snap.data!.docs.length,
-                            reverse: true,
-                            itemBuilder: (context, i) {
-                              return ChatWidgets.messagesCard(snap.data!.docs[i]['From']!=FirebaseAuth.instance.currentUser!.uid,snap.data!.docs[i]['messages'],'10:00');
-                            },
-                          );
-                        }
-                      );
-                    }else{
-                      return Text("No conversations found");
-                    }
-                  }else{
-                    return CircularProgressIndicator();
-                  }
-                }
-            ),
-          ),
-        ),
-        Container(
-          color: Colors.white,
-          child:ChatWidgets.messageField(onSubmit: (controller){
-            if(roomid !=null){
-              Map<String,dynamic> data={
-                'message':controller.text.trim(),
-                'from': FirebaseAuth.instance.currentUser!.uid,
-                'datetime':DateTime.now()
-              };
-              firebase.collection('Chats').doc(roomid).update({
-                'last_message':DateTime.now(),
-                'lastMessage':controller.text
-              });
-              firebase.collection('Chats').doc(roomid).collection('messages').add(data);
-            }else{
-              Map<String,dynamic> data={
-              'message':controller.text.trim(),
-              'from': FirebaseAuth.instance.currentUser!.uid,
-              'datetime':DateTime.now(),
-          };
-              firebase.collection('Chats').add({'Users':[widget.id,FirebaseAuth.instance.currentUser!.uid],
-                'lastMessage':controller.text
-              }).then((value)async{
-                value.collection('messsages');
-              });
-          }
-            controller.clear();
-          }) ,
-        )
-      ],
-    );
-  }
-}

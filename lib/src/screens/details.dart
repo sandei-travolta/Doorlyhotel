@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_finder/src/database/hotelsreg.dart';
 import 'package:hotel_finder/src/database/users.dart';
@@ -40,9 +41,8 @@ class _DetailscreenState extends State<Detailscreen> {
     if (uid.isNotEmpty) {
       print(uid);
       await _hotelsdatabase.likeHotel(
-        widget.hotelData['Hotel_name'],
-        widget.hotelData['Manager_name'],
-        uid,
+        widget.hotelData['Hotel_name'], widget.hotelData['Contact'], widget.hotelData['Manager_name'], widget.hotelData['Location'],widget.hotelData['Mobile'],widget.hotelData['description'],widget.hotelData['image'],widget.hotelData['image1'],widget.hotelData['image2'],widget.hotelData['image3'],
+        uid,widget.hotelData['Uid']
       );
       await hotelregistration().addlikes(uid,widget.hotelData['Uid']);
     } else {
@@ -50,10 +50,8 @@ class _DetailscreenState extends State<Detailscreen> {
     }
   }
   void blockhotel()async{
-    print(widget.hotelData['Uid']);
-    print(widget.hotelData['Manager_name']);
-    print(widget.hotelData['Hotel_name']);
-    String userid= await _hotelsdatabase.blockHotel(widget.hotelData['Hotel_name'], widget.hotelData['Manager_name']);
+
+    String userid= await _hotelsdatabase.blockHotel(widget.hotelData['Hotel_name'], widget.hotelData['Contact'], widget.hotelData['Manager_name'], widget.hotelData['Location'],widget.hotelData['Mobile'],widget.hotelData['description'],widget.hotelData['image'],widget.hotelData['image1'],widget.hotelData['image2'],widget.hotelData['image3'],widget.hotelData['Uid']);
     if(userid!=null){
       print("Blocked");
     }
@@ -62,13 +60,14 @@ class _DetailscreenState extends State<Detailscreen> {
     }
   }
 
-  final List<String> imageUrls = [
-    "assets/images/dummyimage.jpg",
-    "assets/images/dummyimage.jpg",
-    "assets/images/dummyimage.jpg"
-  ];
+
   @override
   Widget build(BuildContext context) {
+    final List<String> imageUrls = [
+      widget.hotelData['image1'],
+      widget.hotelData['image2'],
+      widget.hotelData['image3']
+    ];
     final CarouselOptions options = CarouselOptions(
       height: 200,
       autoPlay: true,
@@ -97,7 +96,7 @@ class _DetailscreenState extends State<Detailscreen> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20), // Set the desired border radius here
                     child: Image(
-                      image: AssetImage("assets/images/dummyimage.jpg"),
+                      image: NetworkImage(widget.hotelData['image']),
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -114,7 +113,7 @@ class _DetailscreenState extends State<Detailscreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.0),
                           image: DecorationImage(
-                            image: AssetImage(url),
+                            image: NetworkImage(url),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -140,7 +139,7 @@ class _DetailscreenState extends State<Detailscreen> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 20.0,top: 10),
-                child: Text("Nairobi",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w300),),
+                child: Text(widget.hotelData['Location'],style: TextStyle(fontSize: 20,fontWeight: FontWeight.w300),),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 20.0,top: 10),
@@ -148,12 +147,11 @@ class _DetailscreenState extends State<Detailscreen> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 20.0,top: 10,bottom: 20),
-                child: Text("hotelexample@gmail.com",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w300),),
+                child: Text(widget.hotelData['Contact'],style: TextStyle(fontSize: 20,fontWeight: FontWeight.w300),),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",maxLines: 15,),
-              ),
+                child: Text(widget.hotelData['description'],maxLines: 50)),
               SizedBox(height: 20,),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -162,8 +160,7 @@ class _DetailscreenState extends State<Detailscreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        /*builder: (context) => MessageScreen(hotelName: widget.hotelData['Hotel_name'],hotelId: widget.hotelData['Uid'],),*/
-                        builder: (context) => MessageScreen(id:widget.hotelData['Uid''']),
+                        builder: (context) => MessageScreen(hotelName: widget.hotelData['Hotel_name'],hotelId: widget.hotelData['Uid'],id: FirebaseAuth.instance.currentUser!.uid,),
                       ),
                     );
                   },

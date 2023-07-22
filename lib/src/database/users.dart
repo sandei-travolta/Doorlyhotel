@@ -23,7 +23,28 @@ class UserCollection{
       print(uid);
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('Users')
-          .where('UId', isEqualTo: uid)
+          .where('Uid', isEqualTo: uid)
+          .get();
+
+      if (querySnapshot.docs.length > 0) {
+        return querySnapshot.docs[0].data() as Map<String, dynamic>;
+      } else {
+        return {};
+      }
+    } catch (e) {
+      print('Error getting users list: $e');
+      // Handle error here, such as showing an error message.
+      return {};
+    }
+  }
+  Future<Map<String, dynamic>> getHotelDetails() async {
+    String uid = authenticationService.getCurrentUser()!.uid;
+
+    try {
+      print(uid);
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Hotels')
+          .where('Uid', isEqualTo: uid)
           .get();
 
       if (querySnapshot.docs.length > 0) {

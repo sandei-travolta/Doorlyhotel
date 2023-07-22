@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -115,6 +116,45 @@ class AuthenticationService{
     } catch (e) {
       // Handle any exceptions that might occur during the sign-in process
       print("Error signing in with Google: ${e.toString()}");
+    }
+  }
+  Future<User?> loginHotel(String email, String password) async {
+    try {
+      UserCredential result = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      // Check if the user exists in the 'admin' collection
+      bool isAdmin = await checkIfUserIsAdmin(result.user?.uid);
+
+      if (isAdmin) {
+        // Return the User object if the user is an admin
+        return result.user;
+      } else {
+        // Return null if the user is not an admin
+        return null;
+      }
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+  Future<bool> checkIfUserIsAdmin(String? uid) async {
+    if (uid == null) return false;
+
+    try {
+      // Reference the 'admin' collection in Firestore
+      CollectionReference adminCollection = FirebaseFirestore.instance.collection('Hotels');
+
+      // Query for documents where the UID field matches the user's UID
+      QuerySnapshot snapshot = await adminCollection.where('Uid', isEqualTo: uid).get();
+
+      // Check if any documents were found
+      return snapshot.docs.isNotEmpty;
+    } catch (e) {
+      print(e.toString());
+      return false;
     }
   }
 }

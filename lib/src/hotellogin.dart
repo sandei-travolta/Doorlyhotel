@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hotel_finder/colors.dart';
 import 'package:hotel_finder/src/firebase/auth_service.dart';
 import 'package:hotel_finder/src/widgets/texfields.dart';
+
+import 'Hotel directory/homepag.dart';
 class hloginpage extends StatefulWidget {
   hloginpage({Key? key}) : super(key: key);
 
@@ -15,19 +17,21 @@ class _hloginpageState extends State<hloginpage> {
   TextEditingController emailcontroller=TextEditingController();
   TextEditingController passwordcontroller=TextEditingController();
   void signinUser() async{
-    dynamic authresult=await _authenticationService.loginuser(emailcontroller.text, passwordcontroller.text);
+    dynamic authresult=await _authenticationService.loginHotel(emailcontroller.text, passwordcontroller.text);
     if(authresult==null){
-      print("unable to sign in");
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Not authorized"),));
     }else{
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>Hotelhomepage()));
       emailcontroller.clear();
       passwordcontroller.clear();
-      print("Signed in");
+
     }
   }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

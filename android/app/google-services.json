@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "615752753862",
+    "firebase_url": "https://hotel-finder-apk-default-rtdb.firebaseio.com",
     "project_id": "hotel-finder-apk",
     "storage_bucket": "hotel-finder-apk.appspot.com"
   },
